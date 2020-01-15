@@ -33,10 +33,13 @@ VET = go vet $(VET_PKGS)
 
 DOCKER_BUILD ?= $(DOCKER) run --rm -v $(DIR):$(BUILDMNT) -w $(BUILDMNT) $(BUILD_IMAGE) /bin/sh -c
 
-all: container
+all: build
+
+build:
+	go vet ./...
+	CGO_ENABLED=0 go build -o bin/eventrouter
 
 container:
-	$(DOCKER_BUILD) 'CGO_ENABLED=0 go build'
 	$(DOCKER) build -t $(REGISTRY)/$(TARGET):latest -t $(REGISTRY)/$(TARGET):$(VERSION) .
 
 push:
@@ -47,7 +50,7 @@ push:
 	fi
 
 test:
-	$(DOCKER_BUILD) '$(TEST)'
+	go test -v ./...
 
 vet:
 	$(DOCKER_BUILD) '$(VET)'
