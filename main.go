@@ -31,6 +31,7 @@ import (
 
 	"k8s.io/client-go/informers"
 	"k8s.io/client-go/kubernetes"
+	_ "k8s.io/client-go/plugin/pkg/client/auth/oidc"
 	"k8s.io/client-go/rest"
 	"k8s.io/client-go/tools/clientcmd"
 )
@@ -86,7 +87,15 @@ func loadConfig() kubernetes.Interface {
 	}
 	kubeconfig := viper.GetString("kubeconfig")
 	if len(kubeconfig) > 0 {
-		config, err = clientcmd.BuildConfigFromFlags("", kubeconfig)
+
+		//config, err = clientcmd.BuildConfigFromFlags("", kubeconfig)
+		kubeConfig := clientcmd.NewNonInteractiveDeferredLoadingClientConfig(
+			clientcmd.NewDefaultClientConfigLoadingRules(),
+			&clientcmd.ConfigOverrides{},
+		)
+
+		config, err = kubeConfig.ClientConfig()
+
 	} else {
 		config, err = rest.InClusterConfig()
 	}
@@ -129,7 +138,6 @@ func main() {
 		defer wg.Done()
 		eventRouter.Run(stop)
 	}()
-
 	// Startup the Informer(s)
 	glog.Infof("Starting shared Informer(s)")
 	sharedInformers.Start(stop)
