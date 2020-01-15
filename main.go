@@ -67,7 +67,7 @@ func loadConfig() kubernetes.Interface {
 
 	// leverages a file|(ConfigMap)
 	// to be located at /etc/eventrouter/config
-	viper.SetConfigType("json")
+	viper.SetConfigType("yaml")
 	viper.SetConfigName("config")
 	viper.AddConfigPath("/etc/eventrouter/")
 	viper.AddConfigPath(".")
