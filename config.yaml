@@ -1,3 +1,0 @@
-sink: glog
-kubeconfig: on
-metric-prefix: kube
