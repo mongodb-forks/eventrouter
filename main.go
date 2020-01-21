@@ -38,6 +38,7 @@ import (
 
 // addr tells us what address to have the Prometheus metrics listen on.
 var addr = flag.String("listen-address", ":8080", "The address to listen on for HTTP requests.")
+var configFormat = flag.String("config-format", "json", "The configuration file format.")
 
 // setup a signal hander to gracefully exit
 func sigHandler() <-chan struct{} {
@@ -67,7 +68,7 @@ func loadConfig() kubernetes.Interface {
 
 	// leverages a file|(ConfigMap)
 	// to be located at /etc/eventrouter/config
-	viper.SetConfigType("yaml")
+	viper.SetConfigType(*configFormat)
 	viper.SetConfigName("config")
 	viper.AddConfigPath("/etc/eventrouter/")
 	viper.AddConfigPath(".")
