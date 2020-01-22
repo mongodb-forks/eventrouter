@@ -21,6 +21,7 @@ import (
 	"net/http"
 	"os"
 	"os/signal"
+	"strings"
 	"sync"
 	"syscall"
 	"time"
@@ -66,8 +67,15 @@ func loadConfig() kubernetes.Interface {
 
 	flag.Parse()
 
+	if cfgFormat := os.Getenv("EVENTROUTER_CONFIG_FORMAT"); cfgFormat != "" {
+		configFormat = &cfgFormat
+	}
+
 	// leverages a file|(ConfigMap)
 	// to be located at /etc/eventrouter/config
+	viper.SetEnvKeyReplacer(strings.NewReplacer("-", "_"))
+	viper.AutomaticEnv()
+
 	viper.SetConfigType(*configFormat)
 	viper.SetConfigName("config")
 	viper.AddConfigPath("/etc/eventrouter/")
@@ -87,6 +95,7 @@ func loadConfig() kubernetes.Interface {
 	if forceCfg := os.Getenv("EVENTROUTER_CONFIG"); forceCfg != "" {
 		viper.SetConfigFile(forceCfg)
 	}
+
 	kubeconfig := viper.GetString("kubeconfig")
 	if len(kubeconfig) > 0 {
 
