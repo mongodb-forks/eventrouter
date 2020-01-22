@@ -1,0 +1,24 @@
+---
+clone:
+  git:
+    image: plugins/git:latest
+    pull: true
+
+pipeline:
+  test:
+    image: golang:1.12-buster
+    commands:
+      - export GO11MODULE=on
+      - make test
+
+  publish:
+    image: plugins/ecr
+    secrets: [ecr_access_key, ecr_secret_key, ecr_registry]
+    registry: ${ECR_REGISTRY}
+    repo: ${ECR_REGISTRY}devops/${DRONE_REPO_NAME}
+    create_repository: true
+    tags:
+      - git-${DRONE_COMMIT_SHA:0:7}
+      - latest
+    when:
+      event: push

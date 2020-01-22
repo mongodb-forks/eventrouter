@@ -32,48 +32,10 @@ import (
 	"k8s.io/client-go/tools/cache"
 )
 
-var (
-	kubernetesWarningEventCounterVec = prometheus.NewCounterVec(prometheus.CounterOpts{
-		Name: "heptio_eventrouter_warnings_total",
-		Help: "Total number of warning events in the kubernetes cluster",
-	}, []string{
-		"involved_object_kind",
-		"involved_object_name",
-		"involved_object_namespace",
-		"reason",
-		"source",
-	})
-	kubernetesNormalEventCounterVec = prometheus.NewCounterVec(prometheus.CounterOpts{
-		Name: "heptio_eventrouter_normal_total",
-		Help: "Total number of normal events in the kubernetes cluster",
-	}, []string{
-		"involved_object_kind",
-		"involved_object_name",
-		"involved_object_namespace",
-		"reason",
-		"source",
-	})
-	kubernetesInfoEventCounterVec = prometheus.NewCounterVec(prometheus.CounterOpts{
-		Name: "heptio_eventrouter_info_total",
-		Help: "Total number of info events in the kubernetes cluster",
-	}, []string{
-		"involved_object_kind",
-		"involved_object_name",
-		"involved_object_namespace",
-		"reason",
-		"source",
-	})
-	kubernetesUnknownEventCounterVec = prometheus.NewCounterVec(prometheus.CounterOpts{
-		Name: "heptio_eventrouter_unknown_total",
-		Help: "Total number of events of unknown type in the kubernetes cluster",
-	}, []string{
-		"involved_object_kind",
-		"involved_object_name",
-		"involved_object_namespace",
-		"reason",
-		"source",
-	})
-)
+var kubernetesWarningEventCounterVec *prometheus.CounterVec
+var kubernetesNormalEventCounterVec *prometheus.CounterVec
+var kubernetesInfoEventCounterVec *prometheus.CounterVec
+var kubernetesUnknownEventCounterVec *prometheus.CounterVec
 
 // EventRouter is responsible for maintaining a stream of kubernetes
 // system Events and pushing them to another channel for storage
@@ -94,6 +56,47 @@ type EventRouter struct {
 
 // NewEventRouter will create a new event router using the input params
 func NewEventRouter(kubeClient kubernetes.Interface, eventsInformer coreinformers.EventInformer) *EventRouter {
+	kubernetesWarningEventCounterVec = prometheus.NewCounterVec(prometheus.CounterOpts{
+		Name: fmt.Sprintf("%s_eventrouter_warnings_total", viper.GetString("metric-prefix")),
+		Help: "Total number of warning events in the kubernetes cluster",
+	}, []string{
+		"involved_object_kind",
+		"involved_object_name",
+		"involved_object_namespace",
+		"reason",
+		"source",
+	})
+	kubernetesNormalEventCounterVec = prometheus.NewCounterVec(prometheus.CounterOpts{
+		Name: fmt.Sprintf("%s_eventrouter_normal_total", viper.GetString("metric-prefix")),
+		Help: "Total number of normal events in the kubernetes cluster",
+	}, []string{
+		"involved_object_kind",
+		"involved_object_name",
+		"involved_object_namespace",
+		"reason",
+		"source",
+	})
+	kubernetesInfoEventCounterVec = prometheus.NewCounterVec(prometheus.CounterOpts{
+		Name: fmt.Sprintf("%s_eventrouter_info_total", viper.GetString("metric_prefix")),
+		Help: "Total number of info events in the kubernetes cluster",
+	}, []string{
+		"involved_object_kind",
+		"involved_object_name",
+		"involved_object_namespace",
+		"reason",
+		"source",
+	})
+	kubernetesUnknownEventCounterVec = prometheus.NewCounterVec(prometheus.CounterOpts{
+		Name: fmt.Sprintf("%s_eventrouter_unknown_total", viper.GetString("metric-prefix")),
+		Help: "Total number of events of unknown type in the kubernetes cluster",
+	}, []string{
+		"involved_object_kind",
+		"involved_object_name",
+		"involved_object_namespace",
+		"reason",
+		"source",
+	})
+
 	if viper.GetBool("enable-prometheus") {
 		prometheus.MustRegister(kubernetesWarningEventCounterVec)
 		prometheus.MustRegister(kubernetesNormalEventCounterVec)

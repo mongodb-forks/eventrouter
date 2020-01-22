@@ -31,12 +31,14 @@ import (
 
 	"k8s.io/client-go/informers"
 	"k8s.io/client-go/kubernetes"
+	_ "k8s.io/client-go/plugin/pkg/client/auth/oidc"
 	"k8s.io/client-go/rest"
 	"k8s.io/client-go/tools/clientcmd"
 )
 
 // addr tells us what address to have the Prometheus metrics listen on.
 var addr = flag.String("listen-address", ":8080", "The address to listen on for HTTP requests.")
+var configFormat = flag.String("config-format", "json", "The configuration file format.")
 
 // setup a signal hander to gracefully exit
 func sigHandler() <-chan struct{} {
@@ -66,7 +68,7 @@ func loadConfig() kubernetes.Interface {
 
 	// leverages a file|(ConfigMap)
 	// to be located at /etc/eventrouter/config
-	viper.SetConfigType("json")
+	viper.SetConfigType(*configFormat)
 	viper.SetConfigName("config")
 	viper.AddConfigPath("/etc/eventrouter/")
 	viper.AddConfigPath(".")
@@ -74,6 +76,7 @@ func loadConfig() kubernetes.Interface {
 	viper.SetDefault("sink", "glog")
 	viper.SetDefault("resync-interval", time.Minute*30)
 	viper.SetDefault("enable-prometheus", true)
+	viper.SetDefault("metric-prefix", "heptio")
 	if err = viper.ReadInConfig(); err != nil {
 		panic(err.Error())
 	}
@@ -86,7 +89,15 @@ func loadConfig() kubernetes.Interface {
 	}
 	kubeconfig := viper.GetString("kubeconfig")
 	if len(kubeconfig) > 0 {
-		config, err = clientcmd.BuildConfigFromFlags("", kubeconfig)
+
+		//config, err = clientcmd.BuildConfigFromFlags("", kubeconfig)
+		kubeConfig := clientcmd.NewNonInteractiveDeferredLoadingClientConfig(
+			clientcmd.NewDefaultClientConfigLoadingRules(),
+			&clientcmd.ConfigOverrides{},
+		)
+
+		config, err = kubeConfig.ClientConfig()
+
 	} else {
 		config, err = rest.InClusterConfig()
 	}
@@ -129,7 +140,6 @@ func main() {
 		defer wg.Done()
 		eventRouter.Run(stop)
 	}()
-
 	// Startup the Informer(s)
 	glog.Infof("Starting shared Informer(s)")
 	sharedInformers.Start(stop)
