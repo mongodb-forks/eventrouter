@@ -1,0 +1,487 @@
+positions: instr line
+events: inuse_space(kB)
+
+ob=
+fl=(1) /Users/david.katz/go/pkg/mod/github.com/prometheus/client_golang@v1.1.0/prometheus/value.go
+fn=(1) github.com/prometheus/client_golang/prometheus.makeLabelPairs
+0x1d2fa77 156 3584
+-90 156 1536
+
+ob=
+fl=(2) /Users/david.katz/go/pkg/mod/github.com/prometheus/client_golang@v1.1.0/prometheus/vec.go
+fn=(2) github.com/prometheus/client_golang/prometheus.(*metricMap).getOrCreateMetricWithLabelValues
++8620 320 858
+
+ob=
+fl=(3) /usr/local/Cellar/go/1.12.9/libexec/src/regexp/syntax/compile.go
+fn=(3) regexp/syntax.(*compiler).inst
+0x12a4030 173 536
+
+ob=
+fl=(4) /Users/david.katz/go/pkg/mod/github.com/gogo/protobuf@v1.2.2-0.20190723190241-65acae22fc9d/proto/properties.go
+fn=(4) github.com/gogo/protobuf/proto.RegisterType
+-874690 544 532
+
+ob=
+fl=(5) /usr/local/Cellar/go/1.12.9/libexec/src/internal/x/text/unicode/norm/tables.go
+fn=(5) internal/x/text/unicode/norm.init.ializers
++2562338 6710 522
+
+ob=
+fl=(6) /Users/david.katz/go/pkg/mod/github.com/aws/aws-sdk-go@v1.23.2/aws/endpoints/defaults.go
+fn=(6) github.com/aws/aws-sdk-go/aws/endpoints.init.ializers
++7583753 3681 514
+-136024 2210 512
+
+ob=
+fl=(7) /Users/david.katz/go/pkg/mod/k8s.io/api@v0.0.0-20190814101207-0772a1bdf941/authorization/v1/types_swagger_doc_generated.go
+fn=(7) k8s.io/api/authorization/v1.init.ializers
++3829725 41 512
+
+ob=
+fl=(6)
+fn=(6)
+-4050085 152 512
+
+ob=
+fl=(8) /usr/local/Cellar/go/1.12.9/libexec/src/html/template/escape.go
+fn=(8) html/template.init.ializers
+-2839785 309 512
+
+ob=
+fl=(2)
+fn=(9) github.com/prometheus/client_golang/prometheus.inlineLabelValues
++4995565 460 512
+
+ob=
+fl=(9) /Users/david.katz/go/pkg/mod/github.com/prometheus/client_golang@v1.1.0/prometheus/counter.go
+fn=(10) github.com/prometheus/client_golang/prometheus.NewCounterVec.func1
++3743 141 512
+
+ob=
+fl=(10) /Users/david.katz/go/pkg/mod/github.com/json-iterator/go@v1.1.7/iter_str.go
+fn=(11) github.com/json-iterator/go.(*Iterator).ReadString
+0x11924f7 15 512
+
+ob=
+fl=(1)
+fn=(1)
+0x1d2f9de 155 512
+
+ob=
+fl=(11) /usr/local/Cellar/go/1.12.9/libexec/src/runtime/proc.go
+fn=(12) runtime.main
+0x102eaf7 188 0
+cfl=(12) /Users/david.katz/go/pkg/mod/k8s.io/api@v0.0.0-20190814101207-0772a1bdf941/autoscaling/v1/generated.pb.go
+cfn=(13) k8s.io/api/autoscaling/v1.init.0
+calls=0 +2077254 596
+* * 532
+cfl=(5)
+cfn=(5)
+calls=0 -9369934 6710
+* * 522
+cfl=(6)
+cfn=(6)
+calls=0 -1786181 3681
+* * 514
+cfl=(6)
+cfn=(6)
+calls=0 -1922205 2210
+* * 512
+cfl=(7)
+cfn=(7)
+calls=0 +1907520 41
+* * 512
+cfl=(6)
+cfn=(6)
+calls=0 -2142565 152
+* * 512
+cfl=(8)
+cfn=(8)
+calls=0 -4982350 309
+* * 512
+
+ob=
+fl=(13) /Users/david.katz/go/pkg/mod/github.com/json-iterator/go@v1.1.7/config.go
+fn=(14) github.com/json-iterator/go.(*frozenConfig).Unmarshal
++1424120 348 0
+cfl=(14) /Users/david.katz/go/pkg/mod/github.com/json-iterator/go@v1.1.7/reflect.go
+cfn=(15) github.com/json-iterator/go.(*Iterator).ReadVal
+calls=0 +1462698 78
+* * 512
+
+ob=
+fl=(14)
+fn=(15)
++38578 78 0
+cfl=(15) /Users/david.katz/go/pkg/mod/github.com/json-iterator/go@v1.1.7/reflect_struct_decoder.go
+cfn=(16) github.com/json-iterator/go.(*fourFieldsStructDecoder).Decode
+calls=0 +133890 672
+* * 512
+
+ob=
+fl=(16) /Users/david.katz/go/pkg/mod/github.com/json-iterator/go@v1.1.7/reflect_slice.go
+fn=(17) github.com/json-iterator/go.(*sliceDecoder).Decode
++70842 60 0
+cfl=(16)
+cfn=(18) github.com/json-iterator/go.(*sliceDecoder).doDecode
+calls=0 +71629 93
+* * 512
+
+ob=
+fl=(16)
+fn=(18)
++787 93 0
+cfl=(15)
+cfn=(19) github.com/json-iterator/go.(*generalStructDecoder).Decode
+calls=0 +19777 505
+* * 512
+
+ob=
+fl=(15)
+fn=(19)
++18990 505 0
+cfl=(15)
+cfn=(20) github.com/json-iterator/go.(*generalStructDecoder).decodeOneField
+calls=0 +20163 548
+* * 512
+cfl=(15)
+cfn=(20)
+calls=0 +20398 526
+* * 512
+
+ob=
+fl=(15)
+fn=(20)
++1173 548 0
+cfl=(15)
+cfn=(21) github.com/json-iterator/go.(*structFieldDecoder).Decode
+calls=0 +10953 1010
+* * 512
++235 526 0
+cfl=(10)
+cfn=(11)
+calls=0 -97850 15
+* * 512
+
+ob=
+fl=(15)
+fn=(16)
++3285 672 0
+cfl=(15)
+cfn=(21)
+calls=0 +9545 1010
+* * 512
+
+ob=
+fl=(15)
+fn=(21)
++6260 1010 0
+cfl=(16)
+cfn=(17)
+calls=0 -24470 60
+* * 512
+cfl=(15)
+cfn=(19)
+calls=0 -4693 505
+* * 512
+
+ob=
+fl=(3)
+fn=(22) regexp/syntax.(*compiler).compile
++1005653 119 0
+cfl=(3)
+cfn=(23) regexp/syntax.(*compiler).rune
+calls=0 +1012853 267
+* * 536
++1998 154 0
+cfl=(3)
+cfn=(22)
+calls=0 * 119
+* * 536
++40 156 0
+cfl=(3)
+cfn=(22)
+calls=0 +684 146
+* * 536
++644 146 0
+cfl=(3)
+cfn=(22)
+calls=0 -40 154
+* * 536
+cfl=(3)
+cfn=(22)
+calls=0 * 156
+* * 536
+
+ob=
+fl=(3)
+fn=(23)
++4518 267 0
+cfl=(3)
+cfn=(3)
+calls=0 +5116 173
+* * 536
+
+ob=
+fl=(17) /Users/david.katz/go/pkg/mod/k8s.io/apimachinery@v0.0.0-20190814100815-533d101be9a6/pkg/runtime/helper.go
+fn=(24) k8s.io/apimachinery/pkg/runtime.WithoutVersionDecoder.Decode
++606124 252 0
+cfl=(18) /Users/david.katz/go/pkg/mod/k8s.io/apimachinery@v0.0.0-20190814100815-533d101be9a6/pkg/runtime/serializer/json/json.go
+cfn=(25) k8s.io/apimachinery/pkg/runtime/serializer/json.(*Serializer).Decode
+calls=0 0x1dbddf1 255
+* * 512
+
+ob=
+fl=(2)
+fn=(26) github.com/prometheus/client_golang/prometheus.(*metricVec).getMetricWithLabelValues
+0x1d306b4 133 0
+cfl=(2)
+cfn=(2)
+calls=0 0x1d31b2e 319
+* * 6144
+cfl=(2)
+cfn=(2)
+calls=0 0x1d31bc9 320
+* * 858
+cfl=(2)
+cfn=(2)
+calls=0 0x1d31aeb 318
+* * 512
+
+ob=
+fl=(2)
+fn=(2)
++5175 318 0
+cfl=(2)
+cfn=(9)
+calls=0 +9929 460
+* * 512
++67 319 0
+cfl=(9)
+cfn=(10)
+calls=0 +8451 141
+* * 5632
+cfl=(9)
+cfn=(10)
+calls=0 +8497 141
+* * 512
+
+ob=
+fl=(9)
+fn=(10)
++8384 141 0
+cfl=(1)
+cfn=(1)
+calls=0 -8375 156
+* * 3584
+cfl=(1)
+cfn=(1)
+calls=0 -8465 156
+* * 1536
+cfl=(1)
+cfn=(1)
+calls=0 -8528 155
+* * 512
+
+ob=
+fl=(18)
+fn=(25)
++565763 255 0
+cfl=(13)
+cfn=(14)
+calls=0 0x118a5ef 348
+* * 512
+
+ob=
+fl=(12)
+fn=(13)
++1494579 596 0
+cfl=(4)
+cfn=(4)
+calls=0 0x11ce76e 544
+* * 532
+
+ob=
+fl=(19) /Users/david.katz/go/pkg/mod/k8s.io/client-go@v12.0.0+incompatible/rest/request.go
+fn=(27) k8s.io/client-go/rest.Result.Into
++2700904 1112 0
+cfl=(17)
+cfn=(24)
+calls=0 0x1337d86 252
+* * 512
+
+ob=
+fl=(20) /Users/david.katz/go/pkg/mod/k8s.io/client-go@v12.0.0+incompatible/kubernetes/typed/core/v1/event.go
+fn=(28) k8s.io/client-go/kubernetes/typed/core/v1.(*events).List
++215135 91 0
+cfl=(19)
+cfn=(27)
+calls=0 * 1112
+* * 512
+
+ob=
+fl=(21) /Users/david.katz/go/pkg/mod/k8s.io/apimachinery@v0.0.0-20190814100815-533d101be9a6/pkg/util/wait/wait.go
+fn=(29) k8s.io/apimachinery/pkg/util/wait.JitterUntil
++259052 153 0
+cfl=(21)
+cfn=(30) k8s.io/apimachinery/pkg/util/wait.JitterUntil.func1
+calls=0 +261640 152
+* * 7514
+
+ob=
+fl=(21)
+fn=(31) k8s.io/apimachinery/pkg/util/wait.ExponentialBackoff
++937 284 0
+cfl=(22) /Users/david.katz/go/pkg/mod/k8s.io/client-go@v12.0.0+incompatible/tools/cache/shared_informer.go
+cfn=(32) k8s.io/client-go/tools/cache.(*processorListener).run.func1.1
+calls=0 +260261 607
+* * 7514
+
+ob=
+fl=(21)
+fn=(33) k8s.io/apimachinery/pkg/util/wait.(*Group).Start.func1
++1518 71 0
+cfl=(22)
+cfn=(34) k8s.io/client-go/tools/cache.(*processorListener).run
+calls=0 +236219 599
+* * 7514
+
+ob=
+fl=(21)
+fn=(30)
++133 152 0
+cfl=(22)
+cfn=(35) k8s.io/client-go/tools/cache.(*processorListener).run.func1
+calls=0 +258010 601
+* * 7514
+
+ob=
+fl=(23) /Users/david.katz/go/pkg/mod/k8s.io/client-go@v12.0.0+incompatible/tools/pager/pager.go
+fn=(36) k8s.io/client-go/tools/pager.(*ListPager).List
++24873 88 0
+cfl=(23)
+cfn=(37) k8s.io/client-go/tools/pager.SimplePageFunc.func1
+calls=0 +28640 40
+* * 512
+
+ob=
+fl=(23)
+fn=(37)
++3767 40 0
+cfl=(24) /Users/david.katz/go/pkg/mod/k8s.io/client-go@v12.0.0+incompatible/tools/cache/reflector.go
+cfn=(38) k8s.io/client-go/tools/cache.(*Reflector).ListAndWatch.func1.1.2
+calls=0 +226229 184
+* * 512
+cfl=(25) /Users/david.katz/go/pkg/mod/k8s.io/client-go@v12.0.0+incompatible/informers/core/v1/event.go
+cfn=(39) k8s.io/client-go/informers/core/v1.NewFilteredEventInformer.func1
+calls=0 +305796 64
+* * 512
+
+ob=
+fl=(26) /Users/david.katz/go/pkg/mod/k8s.io/client-go@v12.0.0+incompatible/tools/cache/listwatch.go
+fn=(40) k8s.io/client-go/tools/cache.(*ListWatch).List
++181740 106 0
+cfl=(23)
+cfn=(36)
+calls=0 -3767 88
+* * 512
+
+ob=
+fl=(22)
+fn=(34)
++24188 599 0
+cfl=(21)
+cfn=(41) k8s.io/apimachinery/pkg/util/wait.Until
+calls=0 +24236 88
+* * 7514
+
+ob=
+fl=(21)
+fn=(41)
++48 88 0
+cfl=(21)
+cfn=(29)
+calls=0 -237156 153
+* * 7514
+
+ob=
+fl=(24)
+fn=(38)
++16486 184 0
+cfl=(26)
+cfn=(40)
+calls=0 -24236 106
+* * 512
+
+ob=
+fl=(24)
+fn=(42) k8s.io/client-go/tools/cache.(*Reflector).ListAndWatch.func1.1
++494 190 0
+cfl=(23)
+cfn=(36)
+calls=0 -226229 88
+* * 512
+
+ob=
+fl=(22)
+fn=(32)
++6077 607 0
+cfl=(27) /Users/david.katz/go/pkg/mod/k8s.io/client-go@v12.0.0+incompatible/tools/cache/controller.go
+cfn=(43) k8s.io/client-go/tools/cache.ResourceEventHandlerFuncs.OnAdd
+calls=0 +14635 195
+* * 7514
+
+ob=
+fl=(22)
+fn=(35)
++204 601 0
+cfl=(21)
+cfn=(31)
+calls=0 -259324 284
+* * 7514
+
+ob=
+fl=(27)
+fn=(43)
++8354 195 0
+cfl=(28) /Users/david.katz/dev/eventrouter/eventrouter.go
+cfn=(44) main.(*EventRouter).addEvent
+calls=0 +734611 139
+* * 7514
+
+ob=
+fl=(25)
+fn=(39)
++64438 64 0
+cfl=(20)
+cfn=(28)
+calls=0 -527871 91
+* * 512
+
+ob=
+fl=(28)
+fn=(44)
++661819 139 0
+cfl=(28)
+cfn=(45) main.prometheusEvent
+calls=0 +664166 161
+* * 7514
+
+ob=
+fl=(28)
+fn=(45)
++2347 161 0
+cfl=(9)
+cfn=(46) github.com/prometheus/client_golang/prometheus.(*CounterVec).GetMetricWithLabelValues
+calls=0 +2390 172
+* * 7514
+
+ob=
+fl=(9)
+fn=(46)
++43 172 0
+cfl=(2)
+cfn=(26)
+calls=0 -6246482 133
+* * 7514
