@@ -150,14 +150,14 @@ func (er *EventRouter) updateEvent(objOld interface{}, objNew interface{}) {
 	if eOld.ResourceVersion == eNew.ResourceVersion {
 		glog.Infof("Potential reset happening, old and new matching resource versions.")
 		reset := false
-		if lastReset.IsZero() || time.Since(lastReset) >= time.Second {
+		if lastReset.IsZero() || time.Since(lastReset) >= time.Minute*30 {
 			glog.Info("TIME SINCE LAST RESET ", time.Since(lastReset))
 			lastReset = time.Now()
 			reset = true
 		}
 
 		if reset {
-			glog.Info("Reseting prom vectors")
+			glog.Info("Reseting vectors")
 			kubernetesNormalEventCounterVec.Reset()
 			kubernetesInfoEventCounterVec.Reset()
 			kubernetesUnknownEventCounterVec.Reset()
