@@ -32,6 +32,56 @@ import (
 	"k8s.io/client-go/tools/cache"
 )
 
+var (
+	kubernetesWarningEventCounterVec = prometheus.NewCounterVec(prometheus.CounterOpts{
+		Name: "kube_eventrouter_warnings_total",
+		Help: "Total number of warning events in the kubernetes cluster",
+	}, []string{
+		"involved_object_kind",
+		"involved_object_name",
+		"involved_object_namespace",
+		"reason",
+		"source",
+	})
+	kubernetesNormalEventCounterVec = prometheus.NewCounterVec(prometheus.CounterOpts{
+		Name: "kube_eventrouter_normal_total",
+		Help: "Total number of normal events in the kubernetes cluster",
+	}, []string{
+		"involved_object_kind",
+		"involved_object_name",
+		"involved_object_namespace",
+		"reason",
+		"source",
+	})
+	kubernetesInfoEventCounterVec = prometheus.NewCounterVec(prometheus.CounterOpts{
+		Name: "kube_eventrouter_info_total",
+		Help: "Total number of info events in the kubernetes cluster",
+	}, []string{
+		"involved_object_kind",
+		"involved_object_name",
+		"involved_object_namespace",
+		"reason",
+		"source",
+	})
+	kubernetesUnknownEventCounterVec = prometheus.NewCounterVec(prometheus.CounterOpts{
+		Name: "kube_eventrouter_unknown_total",
+		Help: "Total number of events of unknown type in the kubernetes cluster",
+	}, []string{
+		"involved_object_kind",
+		"involved_object_name",
+		"involved_object_namespace",
+		"reason",
+		"source",
+	})
+)
+
+func init() {
+	prometheus.MustRegister(kubernetesWarningEventCounterVec)
+	prometheus.MustRegister(kubernetesNormalEventCounterVec)
+	prometheus.MustRegister(kubernetesInfoEventCounterVec)
+	prometheus.MustRegister(kubernetesUnknownEventCounterVec)
+}
+
 // EventRouter is responsible for maintaining a stream of kubernetes
 // system Events and pushing them to another channel for storage
 type EventRouter struct {
@@ -47,11 +97,6 @@ type EventRouter struct {
 	// event sink
 	// TODO: Determine if we want to support multiple sinks.
 	eSink sinks.EventSinkInterface
-
-	kubernetesWarningEventCounterVec *prometheus.CounterVec
-	kubernetesNormalEventCounterVec  *prometheus.CounterVec
-	kubernetesInfoEventCounterVec    *prometheus.CounterVec
-	kubernetesUnknownEventCounterVec *prometheus.CounterVec
 }
 
 // NewEventRouter will create a new event router using the input params
@@ -60,53 +105,6 @@ func NewEventRouter(kubeClient kubernetes.Interface, eventsInformer coreinformer
 	er := &EventRouter{
 		kubeClient: kubeClient,
 		eSink:      sinks.ManufactureSink(),
-		kubernetesWarningEventCounterVec: prometheus.NewCounterVec(prometheus.CounterOpts{
-			Name: fmt.Sprintf("%s_eventrouter_warnings_total", viper.GetString("metric-prefix")),
-			Help: "Total number of warning events in the kubernetes cluster",
-		}, []string{
-			"involved_object_kind",
-			"involved_object_name",
-			"involved_object_namespace",
-			"reason",
-			"source",
-		}),
-		kubernetesNormalEventCounterVec: prometheus.NewCounterVec(prometheus.CounterOpts{
-			Name: fmt.Sprintf("%s_eventrouter_normal_total", viper.GetString("metric-prefix")),
-			Help: "Total number of normal events in the kubernetes cluster",
-		}, []string{
-			"involved_object_kind",
-			"involved_object_name",
-			"involved_object_namespace",
-			"reason",
-			"source",
-		}),
-		kubernetesInfoEventCounterVec: prometheus.NewCounterVec(prometheus.CounterOpts{
-			Name: fmt.Sprintf("%s_eventrouter_info_total", viper.GetString("metric_prefix")),
-			Help: "Total number of info events in the kubernetes cluster",
-		}, []string{
-			"involved_object_kind",
-			"involved_object_name",
-			"involved_object_namespace",
-			"reason",
-			"source",
-		}),
-		kubernetesUnknownEventCounterVec: prometheus.NewCounterVec(prometheus.CounterOpts{
-			Name: fmt.Sprintf("%s_eventrouter_unknown_total", viper.GetString("metric-prefix")),
-			Help: "Total number of events of unknown type in the kubernetes cluster",
-		}, []string{
-			"involved_object_kind",
-			"involved_object_name",
-			"involved_object_namespace",
-			"reason",
-			"source",
-		}),
-	}
-
-	if viper.GetBool("enable-prometheus") {
-		prometheus.MustRegister(er.kubernetesWarningEventCounterVec)
-		prometheus.MustRegister(er.kubernetesNormalEventCounterVec)
-		prometheus.MustRegister(er.kubernetesInfoEventCounterVec)
-		prometheus.MustRegister(er.kubernetesUnknownEventCounterVec)
 	}
 
 	eventsInformer.Informer().AddEventHandler(cache.ResourceEventHandlerFuncs{
@@ -154,50 +152,86 @@ func (er *EventRouter) prometheusEvent(event *v1.Event) {
 	if !viper.GetBool("enable-prometheus") {
 		return
 	}
-	var counter prometheus.Counter
-	var err error
+
+	//var counter prometheus.Counter
+	//var err error
 
 	switch event.Type {
 	case "Normal":
-		counter, err = er.kubernetesNormalEventCounterVec.GetMetricWithLabelValues(
-			event.InvolvedObject.Kind,
-			event.InvolvedObject.Name,
-			event.InvolvedObject.Namespace,
-			event.Reason,
-			event.Source.Host,
-		)
+		kubernetesNormalEventCounterVec.With(prometheus.Labels{"involved_object_kind": event.InvolvedObject.Kind,
+			"involved_object_name":      event.InvolvedObject.Name,
+			"involved_object_namespace": event.InvolvedObject.Namespace,
+			"reason":                    event.Reason,
+			"source":                    event.Source.Host,
+		}).Inc()
+
+		/*
+			counter, err = er.kubernetesNormalEventCounterVec.GetMetricWithLabelValues(
+				event.InvolvedObject.Kind,
+				event.InvolvedObject.Name,
+				event.InvolvedObject.Namespace,
+				event.Reason,
+				event.Source.Host,
+			)
+		*/
 	case "Warning":
-		counter, err = er.kubernetesWarningEventCounterVec.GetMetricWithLabelValues(
-			event.InvolvedObject.Kind,
-			event.InvolvedObject.Name,
-			event.InvolvedObject.Namespace,
-			event.Reason,
-			event.Source.Host,
-		)
+		kubernetesWarningEventCounterVec.With(prometheus.Labels{"involved_object_kind": event.InvolvedObject.Kind,
+			"involved_object_name":      event.InvolvedObject.Name,
+			"involved_object_namespace": event.InvolvedObject.Namespace,
+			"reason":                    event.Reason,
+			"source":                    event.Source.Host,
+		}).Inc()
+
+		/*
+			counter, err = er.kubernetesWarningEventCounterVec.GetMetricWithLabelValues(
+				event.InvolvedObject.Kind,
+				event.InvolvedObject.Name,
+				event.InvolvedObject.Namespace,
+				event.Reason,
+				event.Source.Host,
+			)
+		*/
 	case "Info":
-		counter, err = er.kubernetesInfoEventCounterVec.GetMetricWithLabelValues(
-			event.InvolvedObject.Kind,
-			event.InvolvedObject.Name,
-			event.InvolvedObject.Namespace,
-			event.Reason,
-			event.Source.Host,
-		)
+		kubernetesInfoEventCounterVec.With(prometheus.Labels{"involved_object_kind": event.InvolvedObject.Kind,
+			"involved_object_name":      event.InvolvedObject.Name,
+			"involved_object_namespace": event.InvolvedObject.Namespace,
+			"reason":                    event.Reason,
+			"source":                    event.Source.Host,
+		}).Inc()
+		/*
+			counter, err = er.kubernetesInfoEventCounterVec.GetMetricWithLabelValues(
+				event.InvolvedObject.Kind,
+				event.InvolvedObject.Name,
+				event.InvolvedObject.Namespace,
+				event.Reason,
+				event.Source.Host,
+			)
+		*/
 	default:
-		counter, err = er.kubernetesUnknownEventCounterVec.GetMetricWithLabelValues(
-			event.InvolvedObject.Kind,
-			event.InvolvedObject.Name,
-			event.InvolvedObject.Namespace,
-			event.Reason,
-			event.Source.Host,
-		)
+		kubernetesUnknownEventCounterVec.With(prometheus.Labels{"involved_object_kind": event.InvolvedObject.Kind,
+			"involved_object_name":      event.InvolvedObject.Name,
+			"involved_object_namespace": event.InvolvedObject.Namespace,
+			"reason":                    event.Reason,
+			"source":                    event.Source.Host,
+		}).Inc()
+		/*
+			counter, err = er.kubernetesUnknownEventCounterVec.GetMetricWithLabelValues(
+				event.InvolvedObject.Kind,
+				event.InvolvedObject.Name,
+				event.InvolvedObject.Namespace,
+				event.Reason,
+				event.Source.Host,
+			)*/
 	}
 
-	if err != nil {
-		// Not sure this is the right place to log this error?
-		glog.Warning(err)
-	} else {
-		counter.Add(1)
-	}
+	/*
+		if err != nil {
+			// Not sure this is the right place to log this error?
+			glog.Warning(err)
+		} else {
+			counter.Add(1)
+		}
+	*/
 }
 
 // deleteEvent should only occur when the system garbage collects events via TTL expiration
