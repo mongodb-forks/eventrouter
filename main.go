@@ -21,10 +21,14 @@ import (
 	"net/http"
 	"os"
 	"os/signal"
+	"runtime"
+	"runtime/pprof"
 	"strings"
 	"sync"
 	"syscall"
 	"time"
+
+	_ "net/http/pprof"
 
 	"github.com/golang/glog"
 	"github.com/prometheus/client_golang/prometheus/promhttp"
@@ -40,6 +44,7 @@ import (
 // addr tells us what address to have the Prometheus metrics listen on.
 var addr = flag.String("listen-address", ":8080", "The address to listen on for HTTP requests.")
 var configFormat = flag.String("config-format", "json", "The configuration file format.")
+var memprofile = flag.String("memprofile", "", "write memory profile to `file`")
 
 // setup a signal hander to gracefully exit
 func sigHandler() <-chan struct{} {
@@ -154,5 +159,18 @@ func main() {
 	sharedInformers.Start(stop)
 	wg.Wait()
 	glog.Warningf("Exiting main()")
+
+	if *memprofile != "" {
+		f, err := os.Create(*memprofile)
+		if err != nil {
+			glog.Fatal("could not create memory profile: ", err)
+		}
+		defer f.Close()
+		runtime.GC() // get up-to-date statistics
+		if err := pprof.WriteHeapProfile(f); err != nil {
+			glog.Fatal("could not write memory profile: ", err)
+		}
+	}
+
 	os.Exit(1)
 }
