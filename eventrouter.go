@@ -141,6 +141,7 @@ func (er *EventRouter) addEvent(obj interface{}) {
 }
 
 var lastReset time.Time
+var firstReset = true
 
 // updateEvent is called any time there is an update to an existing event
 func (er *EventRouter) updateEvent(objOld interface{}, objNew interface{}) {
@@ -150,10 +151,11 @@ func (er *EventRouter) updateEvent(objOld interface{}, objNew interface{}) {
 	if eOld.ResourceVersion == eNew.ResourceVersion {
 		glog.Infof("Potential reset happening, old and new matching resource versions.")
 		reset := false
-		if lastReset.IsZero() || time.Since(lastReset) >= time.Minute*30 {
+		if firstReset || lastReset.IsZero() || time.Since(lastReset) >= (time.Minute*30) {
 			glog.Info("TIME SINCE LAST RESET ", time.Since(lastReset))
 			lastReset = time.Now()
 			reset = true
+      firstReset = false
 		}
 
 		if reset {
