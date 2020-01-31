@@ -151,6 +151,7 @@ func (er *EventRouter) updateEvent(objOld interface{}, objNew interface{}) {
 	if eOld.ResourceVersion == eNew.ResourceVersion {
 		glog.Infof("Potential reset happening, old and new matching resource versions.")
 		reset := false
+
 		if firstReset || lastReset.IsZero() || time.Since(lastReset) >= (time.Minute*30) {
 			glog.Info("TIME SINCE LAST RESET ", time.Since(lastReset))
 			lastReset = time.Now()
@@ -165,7 +166,7 @@ func (er *EventRouter) updateEvent(objOld interface{}, objNew interface{}) {
 			kubernetesUnknownEventCounterVec.Reset()
 			kubernetesWarningEventCounterVec.Reset()
 		}
-
+		return
 	}
 
 	er.prometheusEvent(eNew)
