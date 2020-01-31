@@ -155,7 +155,7 @@ func (er *EventRouter) updateEvent(objOld interface{}, objNew interface{}) {
 			glog.Info("TIME SINCE LAST RESET ", time.Since(lastReset))
 			lastReset = time.Now()
 			reset = true
-      firstReset = false
+			firstReset = false
 		}
 
 		if reset {
