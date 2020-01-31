@@ -151,24 +151,19 @@ func (er *EventRouter) updateEvent(objOld interface{}, objNew interface{}) {
 
 	// Detect if the Informer is in resync
 	// In a re-sync previous events are re-submitted as updateEvents, which means  ResourceVersions will match between the eOld and eNew.
-	// Since there could be legimtate k8s reasons to re-emit an event, we also check to see if the last
+	// Since there could be legitimate k8s reasons to re-emit an event, we also check to see if the last
 	// time vectors reset was at least X time ago as indicated by the resync interval.
 	if eOld.ResourceVersion == eNew.ResourceVersion {
-		reset := false
-
 		if er.lastReset.IsZero() || time.Since(er.lastReset) >= viper.GetDuration("resync-interval") {
 			glog.Info("Time since last reset: ", time.Since(er.lastReset))
 			er.lastReset = time.Now()
-			reset = true
-		}
-
-		if reset {
 			glog.Info("Reseting vectors")
 			kubernetesNormalEventCounterVec.Reset()
 			kubernetesInfoEventCounterVec.Reset()
 			kubernetesUnknownEventCounterVec.Reset()
 			kubernetesWarningEventCounterVec.Reset()
 		}
+
 		return
 	}
 
