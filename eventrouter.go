@@ -18,6 +18,7 @@ package main
 
 import (
 	"fmt"
+	"time"
 
 	"github.com/golang/glog"
 	"github.com/heptiolabs/eventrouter/sinks"
@@ -52,6 +53,9 @@ type EventRouter struct {
 	// event sink
 	// TODO: Determine if we want to support multiple sinks.
 	eSink sinks.EventSinkInterface
+
+	// Keeps track of the last time the SharedInformer executed a re-sync
+	lastReset time.Time
 }
 
 // NewEventRouter will create a new event router using the input params
@@ -144,6 +148,25 @@ func (er *EventRouter) addEvent(obj interface{}) {
 func (er *EventRouter) updateEvent(objOld interface{}, objNew interface{}) {
 	eOld := objOld.(*v1.Event)
 	eNew := objNew.(*v1.Event)
+
+	// Detect if the Informer is in resync
+	// In a re-sync previous events are re-submitted as updateEvents, which means  ResourceVersions will match between the eOld and eNew.
+	// Since there could be legitimate k8s reasons to re-emit an event, we also check to see if the last
+	// time vectors reset was at least X time ago as indicated by the resync interval.
+	if eOld.ResourceVersion == eNew.ResourceVersion {
+		if er.lastReset.IsZero() || time.Since(er.lastReset) >= viper.GetDuration("resync-interval") {
+			glog.Info("Time since last reset: ", time.Since(er.lastReset))
+			er.lastReset = time.Now()
+			glog.Info("Reseting vectors")
+			kubernetesNormalEventCounterVec.Reset()
+			kubernetesInfoEventCounterVec.Reset()
+			kubernetesUnknownEventCounterVec.Reset()
+			kubernetesWarningEventCounterVec.Reset()
+		}
+
+		return
+	}
+
 	prometheusEvent(eNew)
 	er.eSink.UpdateEvents(eNew, eOld)
 }
